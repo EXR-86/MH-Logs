@@ -19,7 +19,7 @@ public class LogsReader {
      * @return
      */
     public List<File> readLogsFolder(String folderPath) {
-        File readFolderPath = new File(PropertiesFileReader.getMessage(PropertiesKeyEnum.LOG_FILES_FOLDER_PATH.getKey()));
+        File readFolderPath = new File(folderPath);
         File[] filesList = readFolderPath.listFiles();
         System.out.println(filesList);
         return List.of(filesList);

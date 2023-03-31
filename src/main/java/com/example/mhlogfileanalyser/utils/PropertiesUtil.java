@@ -7,10 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class PropertiesFileReader {
+public class PropertiesUtil {
     private static final String MESSAGE_PROPERTY_FILE_PREFIX = "application";
 
     private static ResourceBundle moduleMessagesResourceBundle;
@@ -36,6 +35,7 @@ public class PropertiesFileReader {
     }
 
     public static String getMessage(ResourceBundle resourceBundle, String key, Object... arguments) {
+
         if (resourceBundle.containsKey(key)) {
             String error = resourceBundle.getString(key);
             return MessageFormat.format(error, arguments);

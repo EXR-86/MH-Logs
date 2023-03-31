@@ -1,5 +1,6 @@
 package com.example.mhlogfileanalyser;
 
+import com.example.mhlogfileanalyser.readfiles.LogFileReader;
 import com.example.mhlogfileanalyser.readfiles.LogsReader;
 import com.example.mhlogfileanalyser.utils.PropertiesFileReader;
 import com.example.mhlogfileanalyser.utils.PropertiesKeyEnum;
@@ -17,9 +18,11 @@ import java.util.List;
 public class MhLogFileAnalyserApplication {
 
     private final LogsReader logsReader;
+    private final LogFileReader logFileReader;
 
-    public MhLogFileAnalyserApplication(LogsReader logsReader) {
+    public MhLogFileAnalyserApplication(LogsReader logsReader, LogFileReader logFileReader) {
         this.logsReader = logsReader;
+        this.logFileReader = logFileReader;
     }
 
     public static void main(String[] args) {
@@ -28,9 +31,14 @@ public class MhLogFileAnalyserApplication {
 
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
-      List<File> listOfLogFiles = logsReader.readLogsFolder(PropertiesFileReader.getMessage(PropertiesKeyEnum.LOG_FILES_FOLDER_PATH.getKey()));
+     doFileMerge();
         return args -> {
-            System.out.println(listOfLogFiles);
+            System.out.println();
         };
+    }
+
+    private void doFileMerge(){
+        List<File> listOfLogFiles = logsReader.readLogsFolder(PropertiesFileReader.getMessage(PropertiesKeyEnum.LOG_FILES_FOLDER_PATH.getKey()));
+        logFileReader.performRead(listOfLogFiles);
     }
 }
