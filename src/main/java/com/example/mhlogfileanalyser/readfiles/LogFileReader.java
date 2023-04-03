@@ -2,6 +2,7 @@ package com.example.mhlogfileanalyser.readfiles;
 
 import com.example.mhlogfileanalyser.utils.PropertiesFileReader;
 import com.example.mhlogfileanalyser.utils.PropertiesKeyEnum;
+import com.example.mhlogfileanalyser.writefiles.LogFileWriter;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,11 @@ import java.util.regex.Pattern;
 @Data
 public class LogFileReader {
 
+    public LogFileReader(LogFileWriter logFileWriter) {
+        this.logFileWriter = logFileWriter;
+    }
+
+    private final LogFileWriter logFileWriter;
     public void performRead(List<File> listOfLogFiles) {
         for (File filePath : listOfLogFiles) {
             performRead(filePath);
@@ -54,7 +60,7 @@ public class LogFileReader {
                 dateAndTime = dateAndTimePatternMatcher.group();
                 perLineContentOfEachFile = perLineContentOfEachFile.replace(dateAndTime, "");
                 contentOfAllFiles.put(dateAndTime, perLineContentOfEachFile);
-                System.out.println(contentOfAllFiles);
+               // System.out.println(contentOfAllFiles);
 
             }
         }
@@ -65,7 +71,7 @@ public class LogFileReader {
                 dateAndTime = dateAndTimePatternMatcher.group();
                 perLineContentOfEachFile = perLineContentOfEachFile.replace(dateAndTime, "");
                 contentOfAllFiles.put(dateAndTime, perLineContentOfEachFile);
-                System.out.println(contentOfAllFiles);
+                //System.out.println(contentOfAllFiles);
             }
         }
         if (fileName.toString().toLowerCase().startsWith(PropertiesFileReader.getMessage(PropertiesKeyEnum.SIPS_FILES.getKey()))) {
@@ -75,7 +81,7 @@ public class LogFileReader {
                 dateAndTime = dateAndTimePatternMatcher.group();
                 perLineContentOfEachFile = perLineContentOfEachFile.replace(dateAndTime, "");
                 contentOfAllFiles.put(dateAndTime, perLineContentOfEachFile);
-                System.out.println(contentOfAllFiles);
+                //System.out.println(contentOfAllFiles);
             }
         }
         if (fileName.toString().toLowerCase().startsWith(PropertiesFileReader.getMessage(PropertiesKeyEnum.LOCALPUSH_FILES.getKey()))) {
@@ -85,11 +91,11 @@ public class LogFileReader {
                 dateAndTime = dateAndTimePatternMatcher.group();
                 perLineContentOfEachFile = perLineContentOfEachFile.replace(dateAndTime, "");
                 contentOfAllFiles.put(dateAndTime, perLineContentOfEachFile);
-                System.out.println(contentOfAllFiles);
+               // System.out.println(contentOfAllFiles);
 
             }
         }
-
+logFileWriter.ContentToFile(contentOfAllFiles);
     }
 }
 

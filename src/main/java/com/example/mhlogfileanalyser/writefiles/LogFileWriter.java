@@ -17,7 +17,12 @@ public class LogFileWriter {
         String text;
         try {
             FileWriter fileWriter = new FileWriter(PropertiesFileReader.getMessage(PropertiesKeyEnum.NEW_MERGED_FILE.getKey()));
-            System.out.println(contentOfAllFiles);
+            for (Object key: contentOfAllFiles.keySet()) {
+                text = (String) key + contentOfAllFiles.get(key);
+                fileWriter.write( text);
+               System.out.println(text);
+                fileWriter.close();
+            }
 
         } catch (IOException e) {
             System.out.print(e.getMessage());
