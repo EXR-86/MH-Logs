@@ -19,12 +19,13 @@ public enum PropertiesKeyEnum {
 
     SIMPLE("com.mhcure.simple.date.and.time.format"),
 
-    LOG_FILES_FOLDER_PATH("com.mhcure.logfiles.folder.path");
+    LOG_FILES_FOLDER_PATH("com.mhcure.logfiles.folder.path"),
 
-
+    NEW_MERGED_FILE("com.mhcure.logfiles.Mergedfiles");
     private final String key;
 
     PropertiesKeyEnum(String key) {
+
         this.key = key;
     }
 }
