@@ -11,7 +11,7 @@ import java.util.List;
 
 @Component
 @Data
-public class LogsReader {
+public class LogsFolderReader {
 
     /**
      * Reading the folder path and returns the list of log files

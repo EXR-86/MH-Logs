@@ -1,7 +1,7 @@
 package com.example.mhlogfileanalyser;
 
 import com.example.mhlogfileanalyser.readfiles.LogFileReader;
-import com.example.mhlogfileanalyser.readfiles.LogsReader;
+import com.example.mhlogfileanalyser.readfiles.LogsFolderReader;
 import com.example.mhlogfileanalyser.utils.PropertiesFileReader;
 import com.example.mhlogfileanalyser.utils.PropertiesKeyEnum;
 import org.springframework.boot.CommandLineRunner;
@@ -17,11 +17,11 @@ import java.util.List;
 @SpringBootApplication
 public class MhLogFileAnalyserApplication {
 
-    private final LogsReader logsReader;
+    private final LogsFolderReader logsFolderReader;
     private final LogFileReader logFileReader;
 
-    public MhLogFileAnalyserApplication(LogsReader logsReader, LogFileReader logFileReader) {
-        this.logsReader = logsReader;
+    public MhLogFileAnalyserApplication(LogsFolderReader logsFolderReader, LogFileReader logFileReader) {
+        this.logsFolderReader = logsFolderReader;
         this.logFileReader = logFileReader;
     }
 
@@ -31,14 +31,14 @@ public class MhLogFileAnalyserApplication {
 
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
-     doFileMerge();
+        doFileMerge();
         return args -> {
             System.out.println();
         };
     }
 
-    private void doFileMerge(){
-        List<File> listOfLogFiles = logsReader.readLogsFolder(PropertiesFileReader.getMessage(PropertiesKeyEnum.LOG_FILES_FOLDER_PATH.getKey()));
+    private void doFileMerge() {
+        List<File> listOfLogFiles = logsFolderReader.readLogsFolder(PropertiesFileReader.getMessage(PropertiesKeyEnum.LOG_FILES_FOLDER_PATH.getKey()));
         logFileReader.performRead(listOfLogFiles);
     }
 }
