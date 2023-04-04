@@ -5,25 +5,28 @@ import com.example.mhlogfileanalyser.utils.PropertiesKeyEnum;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
 
 @Component
 @Data
 public class LogFileWriter {
 
-    public void ContentToFile(HashMap contentOfAllFiles) {
+    public void ContentToFile(TreeMap contentOfAllFiles) {
         String text;
+        List<String> lines = new ArrayList<>();
         try {
-            FileWriter fileWriter = new FileWriter(PropertiesFileReader.getMessage(PropertiesKeyEnum.NEW_MERGED_FILE.getKey()));
-            for (Object key: contentOfAllFiles.keySet()) {
+            for (Object key : contentOfAllFiles.keySet()) {
                 text = (String) key + contentOfAllFiles.get(key);
-                fileWriter.write( text);
-               System.out.println(text);
-                fileWriter.close();
+                lines.add(text);
+                Files.write(Paths.get(PropertiesFileReader.getMessage(PropertiesKeyEnum.NEW_MERGED_FILE.getKey())), lines, StandardCharsets.UTF_8);
             }
-
         } catch (IOException e) {
             System.out.print(e.getMessage());
         }
