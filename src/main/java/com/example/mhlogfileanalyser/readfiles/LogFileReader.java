@@ -10,7 +10,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
@@ -56,56 +59,82 @@ public class LogFileReader {
         } catch (IOException ex) {
             System.out.println(" Something went wrong!The file name is Incorrect,The file '" + fileContents + "' does not exist.");
         }
-        // System.out.println(contentOfEachFile);
         return contentMap;
     }
 
     private TreeMap createTimeStamp(File filePath, List<String> contentOfEachFile) {
         File fileName = new File(filePath.getName());
         Matcher dateAndTimePatternMatcher;
-        String dateAndTime;
-        TreeMap<String, String> contentOfAllFiles = new TreeMap<>();
-        for (String perLineContentOfEachFile : contentOfEachFile) {
-            if (fileName.toString().toLowerCase().startsWith(PropertiesFileReader.getMessage(PropertiesKeyEnum.APP_FILES.getKey()))) {
-                dateAndTimePatternMatcher = Pattern.compile(PropertiesFileReader.getMessage(PropertiesKeyEnum.APP_DATE_AND_TIME_pattern.getKey())).matcher(perLineContentOfEachFile);
-                if (dateAndTimePatternMatcher.find()) {
-                    dateAndTime = dateAndTimePatternMatcher.group();
-                    perLineContentOfEachFile = perLineContentOfEachFile.replace(dateAndTime, "");
-                    contentOfAllFiles.put(dateAndTime, perLineContentOfEachFile);
-                    //  System.out.println(contentOfAllFiles);
-                }
-
-            }
-            if (fileName.toString().toLowerCase().startsWith(PropertiesFileReader.getMessage(PropertiesKeyEnum.SIP_FILES.getKey()))) {
-                dateAndTimePatternMatcher = Pattern.compile(PropertiesFileReader.getMessage(PropertiesKeyEnum.SIP_DATE_AND_TIME_pattern.getKey())).matcher(perLineContentOfEachFile);
-                if (dateAndTimePatternMatcher.find()) {
-                    dateAndTime = dateAndTimePatternMatcher.group();
-                    perLineContentOfEachFile = perLineContentOfEachFile.replace(dateAndTime, "");
-                    contentOfAllFiles.put(dateAndTime, perLineContentOfEachFile);
-                    // System.out.println(contentOfAllFiles);
-                }
-
-            }
-            if (fileName.toString().toLowerCase().startsWith(PropertiesFileReader.getMessage(PropertiesKeyEnum.SIPS_FILES.getKey()))) {
-                dateAndTimePatternMatcher = Pattern.compile(PropertiesFileReader.getMessage(PropertiesKeyEnum.SIPS_DATE_AND_TIME_pattern.getKey())).matcher(perLineContentOfEachFile);
-                if (dateAndTimePatternMatcher.find()) {
-                    dateAndTime = dateAndTimePatternMatcher.group();
-                    perLineContentOfEachFile = perLineContentOfEachFile.replace(dateAndTime, "");
-                    contentOfAllFiles.put(dateAndTime, perLineContentOfEachFile);
-                    //System.out.println(contentOfAllFiles);
-                }
-
-            }
-            if (fileName.toString().toLowerCase().startsWith(PropertiesFileReader.getMessage(PropertiesKeyEnum.LOCALPUSH_FILES.getKey()))) {
-                dateAndTimePatternMatcher = Pattern.compile(PropertiesFileReader.getMessage(PropertiesKeyEnum.LOCAL_PUSH_DATE_AND_TIME_pattern.getKey())).matcher(perLineContentOfEachFile);
-                if (dateAndTimePatternMatcher.find()) {
-                    dateAndTime = dateAndTimePatternMatcher.group();
-                    perLineContentOfEachFile = perLineContentOfEachFile.replace(dateAndTime, "");
-                    contentOfAllFiles.put(dateAndTime, perLineContentOfEachFile);
-                    // System.out.println(contentOfAllFiles);
+        String dateAndTimeString;
+        Long timeStamp = null;
+        Date dateAndTime;
+        SimpleDateFormat dateFormat;
+        TreeMap<Long, String> contentOfAllFiles = new TreeMap<>();
+        String perLineContentOfEachFile;
+        for (String perLineString : contentOfEachFile) {
+            perLineContentOfEachFile = perLineString;
+            try {
+                if (fileName.toString().toLowerCase().startsWith(PropertiesFileReader.getMessage(PropertiesKeyEnum.APP_FILES.getKey()))) {
+                    dateAndTimePatternMatcher = Pattern.compile(PropertiesFileReader.getMessage(PropertiesKeyEnum.APP_DATE_AND_TIME_pattern.getKey())).matcher(perLineContentOfEachFile);
+                    dateFormat = new SimpleDateFormat(PropertiesFileReader.getMessage(PropertiesKeyEnum.APP_DATE_AND_TIME_FORMAT.getKey()));
+                    if (dateAndTimePatternMatcher.find()) {
+                        dateAndTimeString = dateAndTimePatternMatcher.group();
+                        dateAndTime = dateFormat.parse(dateAndTimeString);
+                        timeStamp = dateAndTime.getTime();
+                        perLineContentOfEachFile = perLineContentOfEachFile.replace(dateAndTimeString, "");
+                        contentOfAllFiles.put(timeStamp, perLineContentOfEachFile);
+                    }
 
                 }
+                if (fileName.toString().toLowerCase().equals(PropertiesFileReader.getMessage(PropertiesKeyEnum.SIP_FILES.getKey()))) {
+                    dateAndTimePatternMatcher = Pattern.compile(PropertiesFileReader.getMessage(PropertiesKeyEnum.SIP_DATE_AND_TIME_pattern.getKey())).matcher(perLineContentOfEachFile);
+                    dateFormat = new SimpleDateFormat(PropertiesFileReader.getMessage(PropertiesKeyEnum.SIP_DATE_AND_TIME_FORMAT.getKey()));
+                    if (dateAndTimePatternMatcher.find()) {
+                        dateAndTimeString = dateAndTimePatternMatcher.group();
+                        dateAndTime = dateFormat.parse(dateAndTimeString);
+                        timeStamp = dateAndTime.getTime();
+                        perLineContentOfEachFile = perLineContentOfEachFile.replace(dateAndTimeString, "");
+                        contentOfAllFiles.put(timeStamp, perLineContentOfEachFile);
+                    }
+                    if (!dateAndTimePatternMatcher.find()) {
+                        contentOfAllFiles.put(contentOfAllFiles.lastEntry().getKey(), contentOfAllFiles.lastEntry().getValue() + perLineContentOfEachFile);
+                    }
 
+
+                }
+                if (fileName.toString().startsWith(PropertiesFileReader.getMessage(PropertiesKeyEnum.SIPIS_FILES.getKey()))) {
+                    dateAndTimePatternMatcher = Pattern.compile(PropertiesFileReader.getMessage(PropertiesKeyEnum.SIPIS_DATE_AND_TIME_pattern.getKey())).matcher(perLineContentOfEachFile);
+                    dateFormat = new SimpleDateFormat(PropertiesFileReader.getMessage(PropertiesKeyEnum.SIPIS_DATE_AND_TIME_FORMAT.getKey()));
+                    if (dateAndTimePatternMatcher.find()) {
+                        dateAndTimeString = dateAndTimePatternMatcher.group();
+                        dateAndTime = dateFormat.parse(dateAndTimeString);
+                        timeStamp = dateAndTime.getTime();
+                        perLineContentOfEachFile = perLineContentOfEachFile.replace(dateAndTimeString, "");
+                        contentOfAllFiles.put(timeStamp, perLineContentOfEachFile);
+                    }
+                    if (!dateAndTimePatternMatcher.find()) {
+                        contentOfAllFiles.put(contentOfAllFiles.lastEntry().getKey(), contentOfAllFiles.lastEntry().getValue() + perLineContentOfEachFile);
+                    }
+
+                }
+                if (fileName.toString().toLowerCase().startsWith(PropertiesFileReader.getMessage(PropertiesKeyEnum.LOCALPUSH_FILES.getKey()))) {
+                    dateAndTimePatternMatcher = Pattern.compile(PropertiesFileReader.getMessage(PropertiesKeyEnum.LOCAL_PUSH_DATE_AND_TIME_pattern.getKey())).matcher(perLineContentOfEachFile);
+                    dateFormat = new SimpleDateFormat(PropertiesFileReader.getMessage(PropertiesKeyEnum.LOCAL_PUSH_DATE_AND_TIME_FORMAT.getKey()));
+                    if (dateAndTimePatternMatcher.find()) {
+                        dateAndTimeString = dateAndTimePatternMatcher.group();
+                        dateAndTime = dateFormat.parse(dateAndTimeString);
+                        timeStamp = dateAndTime.getTime();
+                        perLineContentOfEachFile = perLineContentOfEachFile.replace(dateAndTimeString, "");
+                        contentOfAllFiles.put(timeStamp, perLineContentOfEachFile);
+                    }
+                    if (!dateAndTimePatternMatcher.find()) {
+                        contentOfAllFiles.put(contentOfAllFiles.lastEntry().getKey(), contentOfAllFiles.lastEntry().getValue() + perLineContentOfEachFile);
+                    }
+
+
+                }
+            } catch (ParseException parseException) {
+                parseException.printStackTrace();
             }
         }
 

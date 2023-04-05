@@ -39,6 +39,7 @@ public class MhLogFileAnalyserApplication {
             promptInput = userPromptInput.nextLine();
         } while (!promptInput.equalsIgnoreCase("Y") && !promptInput.equalsIgnoreCase("X"));
         if (promptInput.equalsIgnoreCase("X")) {
+            userPromptInput.close();
             System.exit(400);
         }
         doFileMerge();

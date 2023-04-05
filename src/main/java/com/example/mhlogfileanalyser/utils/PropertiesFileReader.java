@@ -17,7 +17,6 @@ public class PropertiesFileReader {
 
     static {
         try {
-            // Initialize messagesResourceBundle in a static block because the module may not have messages.properties.
             moduleMessagesResourceBundle = ResourceBundle.getBundle(MESSAGE_PROPERTY_FILE_PREFIX);
         } catch (MissingResourceException missingResourceException) {
             log.error(missingResourceException.getMessage());
