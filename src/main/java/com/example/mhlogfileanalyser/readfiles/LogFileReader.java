@@ -59,6 +59,7 @@ public class LogFileReader {
         } catch (IOException ex) {
             System.out.println(" Something went wrong!The file name is Incorrect,The file '" + fileContents + "' does not exist.");
         }
+        // System.out.println(contentOfEachFile);
         return contentMap;
     }
 
@@ -141,6 +142,3 @@ public class LogFileReader {
         return contentOfAllFiles;
     }
 }
-
-
-

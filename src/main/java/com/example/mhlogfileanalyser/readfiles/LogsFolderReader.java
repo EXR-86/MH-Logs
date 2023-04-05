@@ -23,4 +23,3 @@ public class LogsFolderReader {
         return List.of(filesList);
     }
 }
-

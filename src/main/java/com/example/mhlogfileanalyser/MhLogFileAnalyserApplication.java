@@ -40,14 +40,13 @@ public class MhLogFileAnalyserApplication {
         } while (!promptInput.equalsIgnoreCase("Y") && !promptInput.equalsIgnoreCase("X"));
         if (promptInput.equalsIgnoreCase("X")) {
             userPromptInput.close();
-            System.exit(400);
+            System.exit(SpringApplication.exit(configurableApplicationContext, () -> 11));
         }
         doFileMerge();
         return args -> {
             System.out.println();
         };
     }
-
 
     private void doFileMerge() {
         List<File> listOfLogFiles = logsFolderReader.readLogsFolder(PropertiesFileReader.getMessage(PropertiesKeyEnum.LOG_FILES_FOLDER_PATH.getKey()));
