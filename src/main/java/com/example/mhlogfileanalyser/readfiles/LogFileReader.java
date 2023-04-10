@@ -30,7 +30,7 @@ public class LogFileReader {
     }
 
     public void performRead(List<File> listOfLogFiles) {
-        TreeMap<String, String> mergedContentOfAllFiles = new TreeMap<>();
+        TreeMap<Long, String> mergedContentOfAllFiles = new TreeMap<>();
         for (File filePath : listOfLogFiles) {
             if (mergedContentOfAllFiles.isEmpty()) {
                 mergedContentOfAllFiles = performRead(filePath);
@@ -42,7 +42,7 @@ public class LogFileReader {
 
     private TreeMap performRead(File filePath) {
         StringBuilder fileContents = new StringBuilder();
-        TreeMap contentMap = new TreeMap<>();
+        TreeMap<Long,String> contentMap = new TreeMap<>();
         List<String> contentOfEachFile = new ArrayList<>();
 
         try {

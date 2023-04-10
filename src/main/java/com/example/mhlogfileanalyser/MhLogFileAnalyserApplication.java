@@ -28,7 +28,7 @@ public class MhLogFileAnalyserApplication {
     }
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext ctx = SpringApplication.run(MhLogFileAnalyserApplication.class, args);
+        ConfigurableApplicationContext configurableApplicationContext = SpringApplication.run(MhLogFileAnalyserApplication.class, args);
     }
 
     @Bean
