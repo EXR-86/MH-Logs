@@ -12,10 +12,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TreeMap;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,8 +70,8 @@ public class LogFileReader {
         Matcher dateAndTimePatternMatcher;
         String dateAndTimeString;
         Long timeStamp = null;
-        Date dateAndTime;
-        SimpleDateFormat dateFormat;
+        LocalDateTime dateAndTime;
+        DateTimeFormatter dateFormat;
         TreeMap<Long, String> contentOfAllFiles = new TreeMap<>();
         String perLineContentOfEachFile;
         for (String perLineString : contentOfEachFile) {
@@ -77,11 +79,11 @@ public class LogFileReader {
             try {
                 if (fileName.toString().toLowerCase().startsWith(PropertiesFileReader.getMessage(PropertiesKeyEnum.APP_FILES.getKey()))) {
                     dateAndTimePatternMatcher = Pattern.compile(PropertiesFileReader.getMessage(PropertiesKeyEnum.APP_DATE_AND_TIME_pattern.getKey())).matcher(perLineContentOfEachFile);
-                    dateFormat = new SimpleDateFormat(PropertiesFileReader.getMessage(PropertiesKeyEnum.APP_DATE_AND_TIME_FORMAT.getKey()));
+                    dateFormat = DateTimeFormatter.ofPattern(PropertiesFileReader.getMessage(PropertiesKeyEnum.APP_DATE_AND_TIME_FORMAT.getKey()));
                     if (dateAndTimePatternMatcher.find()) {
                         dateAndTimeString = dateAndTimePatternMatcher.group();
-                        dateAndTime = dateFormat.parse(dateAndTimeString);
-                        timeStamp = dateAndTime.getTime();
+                        dateAndTime = LocalDateTime.parse(dateAndTimeString,dateFormat);
+                        timeStamp = ZonedDateTime.of(dateAndTime, ZoneId.systemDefault()).toInstant().toEpochMilli();
                         perLineContentOfEachFile = perLineContentOfEachFile.replace(dateAndTimeString, "");
                         contentOfAllFiles.put(timeStamp, perLineContentOfEachFile);
                     }
@@ -89,11 +91,11 @@ public class LogFileReader {
                 }
                 if (fileName.toString().toLowerCase().equals(PropertiesFileReader.getMessage(PropertiesKeyEnum.SIP_FILES.getKey()))) {
                     dateAndTimePatternMatcher = Pattern.compile(PropertiesFileReader.getMessage(PropertiesKeyEnum.SIP_DATE_AND_TIME_pattern.getKey())).matcher(perLineContentOfEachFile);
-                    dateFormat = new SimpleDateFormat(PropertiesFileReader.getMessage(PropertiesKeyEnum.SIP_DATE_AND_TIME_FORMAT.getKey()));
+                    dateFormat = DateTimeFormatter.ofPattern(PropertiesFileReader.getMessage(PropertiesKeyEnum.SIP_DATE_AND_TIME_FORMAT.getKey()));
                     if (dateAndTimePatternMatcher.find()) {
                         dateAndTimeString = dateAndTimePatternMatcher.group();
-                        dateAndTime = dateFormat.parse(dateAndTimeString);
-                        timeStamp = dateAndTime.getTime();
+                        dateAndTime = LocalDateTime.parse(dateAndTimeString,dateFormat);
+                        timeStamp = ZonedDateTime.of(dateAndTime, ZoneId.systemDefault()).toInstant().toEpochMilli();
                         perLineContentOfEachFile = perLineContentOfEachFile.replace(dateAndTimeString, "");
                         contentOfAllFiles.put(timeStamp, perLineContentOfEachFile);
                     }
@@ -105,11 +107,11 @@ public class LogFileReader {
                 }
                 if (fileName.toString().startsWith(PropertiesFileReader.getMessage(PropertiesKeyEnum.SIPIS_FILES.getKey()))) {
                     dateAndTimePatternMatcher = Pattern.compile(PropertiesFileReader.getMessage(PropertiesKeyEnum.SIPIS_DATE_AND_TIME_pattern.getKey())).matcher(perLineContentOfEachFile);
-                    dateFormat = new SimpleDateFormat(PropertiesFileReader.getMessage(PropertiesKeyEnum.SIPIS_DATE_AND_TIME_FORMAT.getKey()));
+                    dateFormat = DateTimeFormatter.ofPattern(PropertiesFileReader.getMessage(PropertiesKeyEnum.SIPIS_DATE_AND_TIME_FORMAT.getKey()));
                     if (dateAndTimePatternMatcher.find()) {
                         dateAndTimeString = dateAndTimePatternMatcher.group();
-                        dateAndTime = dateFormat.parse(dateAndTimeString);
-                        timeStamp = dateAndTime.getTime();
+                        dateAndTime = LocalDateTime.parse(dateAndTimeString,dateFormat);
+                        timeStamp = ZonedDateTime.of(dateAndTime, ZoneId.systemDefault()).toInstant().toEpochMilli();
                         perLineContentOfEachFile = perLineContentOfEachFile.replace(dateAndTimeString, "");
                         contentOfAllFiles.put(timeStamp, perLineContentOfEachFile);
                     }
@@ -120,11 +122,11 @@ public class LogFileReader {
                 }
                 if (fileName.toString().toLowerCase().startsWith(PropertiesFileReader.getMessage(PropertiesKeyEnum.LOCALPUSH_FILES.getKey()))) {
                     dateAndTimePatternMatcher = Pattern.compile(PropertiesFileReader.getMessage(PropertiesKeyEnum.LOCAL_PUSH_DATE_AND_TIME_pattern.getKey())).matcher(perLineContentOfEachFile);
-                    dateFormat = new SimpleDateFormat(PropertiesFileReader.getMessage(PropertiesKeyEnum.LOCAL_PUSH_DATE_AND_TIME_FORMAT.getKey()));
+                    dateFormat = DateTimeFormatter.ofPattern(PropertiesFileReader.getMessage(PropertiesKeyEnum.LOCAL_PUSH_DATE_AND_TIME_FORMAT.getKey()));
                     if (dateAndTimePatternMatcher.find()) {
                         dateAndTimeString = dateAndTimePatternMatcher.group();
-                        dateAndTime = dateFormat.parse(dateAndTimeString);
-                        timeStamp = dateAndTime.getTime();
+                        dateAndTime = LocalDateTime.parse(dateAndTimeString,dateFormat);
+                        timeStamp = ZonedDateTime.of(dateAndTime, ZoneId.systemDefault()).toInstant().toEpochMilli();
                         perLineContentOfEachFile = perLineContentOfEachFile.replace(dateAndTimeString, "");
                         contentOfAllFiles.put(timeStamp, perLineContentOfEachFile);
                     }
@@ -132,9 +134,8 @@ public class LogFileReader {
                         contentOfAllFiles.put(contentOfAllFiles.lastEntry().getKey(), contentOfAllFiles.lastEntry().getValue() + perLineContentOfEachFile);
                     }
 
-
-                }
-            } catch (ParseException parseException) {
+               }
+            } catch (Exception parseException) {
                 parseException.printStackTrace();
             }
         }
