@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -23,19 +22,19 @@ public class LogFileWriter {
         String text;
         List<String> lines = new ArrayList<>();
         LocalDateTime dateAndTimeOfLogs;
-        DateTimeFormatter mergedFileDateTimeFormat = DateTimeFormatter.ofPattern(PropertiesFileReader.getMessage(PropertiesKeyEnum.SIMPLE_DATE_AND_TIME_FORMAT_FOR_MERGED_FILE.getKey()));
+        DateTimeFormatter mergedFileDateTimeFormat = DateTimeFormatter.ofPattern(PropertiesFileReader
+                .getMessage(PropertiesKeyEnum.SIMPLE_DATE_AND_TIME_FORMAT_FOR_MERGED_FILE.getKey()));
         try {
             for (Object key : contentOfAllFiles.keySet()) {
                 dateAndTimeOfLogs =  LocalDateTime.ofInstant(Instant.ofEpochMilli((Long) key),
                         TimeZone.getDefault().toZoneId());
                 text = dateAndTimeOfLogs.format(mergedFileDateTimeFormat) + contentOfAllFiles.get(key);
                 lines.add(text);
-                Files.write(Paths.get(PropertiesFileReader.getMessage(PropertiesKeyEnum.NEW_MERGED_FILE.getKey())), lines, StandardCharsets.UTF_8);
+                Files.write(Paths.get(PropertiesFileReader.getMessage(PropertiesKeyEnum
+                        .NEW_MERGED_FILE.getKey())), lines, StandardCharsets.UTF_8);
             }
         } catch (IOException e) {
             System.out.print(e.getMessage());
         }
     }
 }
-
-

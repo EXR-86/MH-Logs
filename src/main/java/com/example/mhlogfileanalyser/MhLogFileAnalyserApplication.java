@@ -22,25 +22,29 @@ public class MhLogFileAnalyserApplication {
     private final LogFileReader logFileReader;
     Scanner userPromptInput = new Scanner(System.in);
 
-    public MhLogFileAnalyserApplication(LogsFolderReader logsFolderReader, LogFileReader logFileReader) {
+    public MhLogFileAnalyserApplication(LogsFolderReader logsFolderReader, LogFileReader logFileReader)
+    {
         this.logsFolderReader = logsFolderReader;
         this.logFileReader = logFileReader;
     }
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext configurableApplicationContext = SpringApplication.run(MhLogFileAnalyserApplication.class, args);
+        ConfigurableApplicationContext configurableApplicationContext =
+                SpringApplication.run(MhLogFileAnalyserApplication.class, args);
     }
 
     @Bean
-    public CommandLineRunner commandLineRunner(ApplicationContext configurableApplicationContext) {
+    public CommandLineRunner commandLineRunner(ApplicationContext configurableApplicationContext)
+    {
         String promptInput;
         do {
             System.out.println("Please press Y to merge files and X to terminate");
             promptInput = userPromptInput.nextLine();
-        } while (!promptInput.equalsIgnoreCase("Y") && !promptInput.equalsIgnoreCase("X"));
+        } while (!promptInput.equalsIgnoreCase("Y")
+                && !promptInput.equalsIgnoreCase("X"));
         if (promptInput.equalsIgnoreCase("X")) {
             userPromptInput.close();
-            System.exit(SpringApplication.exit(configurableApplicationContext, () -> 11));
+           System.exit(SpringApplication.exit(configurableApplicationContext, () -> 11));
         }
         doFileMerge();
         return args -> {
@@ -49,7 +53,8 @@ public class MhLogFileAnalyserApplication {
     }
 
     private void doFileMerge() {
-        List<File> listOfLogFiles = logsFolderReader.readLogsFolder(PropertiesFileReader.getMessage(PropertiesKeyEnum.LOG_FILES_FOLDER_PATH.getKey()));
+        List<File> listOfLogFiles = logsFolderReader.readLogsFolder(PropertiesFileReader
+                .getMessage(PropertiesKeyEnum.LOG_FILES_FOLDER_PATH.getKey()));
         logFileReader.performRead(listOfLogFiles);
         System.out.println("File is created successfully with the content.");
     }

@@ -39,7 +39,6 @@ public class PropertiesFileReader {
             String error = resourceBundle.getString(key);
             return MessageFormat.format(error, arguments);
         }
-
         log.debug("Key not found in ResourceBundle. baseName={}", resourceBundle.getBaseBundleName());
         return key;
     }
